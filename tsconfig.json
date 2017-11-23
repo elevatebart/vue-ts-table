@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "*": ["src/*", "app/*"]
+    },
+    "sourceMap": true,
+    "experimentalDecorators": true,
+    "target": "es6",
+    "module": "es2015",
+    "moduleResolution": "node",
+    "noImplicitThis": true,
+    "typeRoots": [
+      "node_modules/@types"
+    ]
+  }
+}
