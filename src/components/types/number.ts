@@ -1,4 +1,4 @@
-import { AbstractType, ColumnOptions } from 'components/table'
+import { AbstractType, ColumnOptions } from '@/components/table'
 
 export class NumberType implements AbstractType {
   isRight: boolean = true

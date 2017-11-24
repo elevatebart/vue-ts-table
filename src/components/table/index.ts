@@ -1,10 +1,9 @@
 import Vue from 'vue'
 import Component from 'vue-class-component'
 import { Prop, Watch } from 'vue-property-decorator'
-import { VueTsPagination } from 'components/Pagination'
+import { VueTsPagination, PageChangedEvent, PerPageChangedEvent } from '@/components/pagination'
 import defaultType from '../types/default'
 import WithRender from './template.html?style=./style.css'
-import { PageChangedEvent, PerPageChangedEvent } from 'components/pagination'
 
 let dataTypes: {[typeName: string]: AbstractType} = {}
 let coreDataTypes = require.context('../types', false, /^\.\/([\w-_]+)\.js$/)
@@ -16,7 +15,7 @@ for (let key of coreDataTypes.keys()) {
 export interface AbstractType {
   format: (value: any, column: ColumnOptions) => string
   compare: (x: any, y: any, column?: ColumnOptions) => number
-  filterPredicate: (rowval: any, filter: string) => boolean
+  filterPredicate: (value: any, filter: string) => boolean
   isRight: boolean
 }
 
@@ -127,6 +126,7 @@ export class VueTsTable extends Vue {
   }
 
   sort (index: number) {
+    console.log('sort')
     if (!this.isSortableColumn(index)) {
       return
     }

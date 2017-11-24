@@ -1,6 +1,6 @@
 import * as moment from 'moment'
 import { Moment } from 'moment'
-import { AbstractType, ColumnOptions } from 'components/table'
+import { AbstractType, ColumnOptions } from '@/components/table'
 
 export class DateType implements AbstractType {
   isRight: boolean = true

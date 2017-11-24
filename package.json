@@ -82,6 +82,7 @@
     "vue-template-compiler": "^2.5.0",
     "vue-template-loader": "^0.3.0",
     "vue-test-utils": "^1.0.0-beta.6",
+    "wallaby-vue-compiler": "^1.0.2",
     "wallaby-webpack": "0.0.45",
     "webpack": "^3.6.0",
     "webpack-bundle-analyzer": "^2.9.0",

@@ -1,8 +1,9 @@
-import { VueTsTable, ColumnOptions } from 'components/Table'
+import { VueTsTable, ColumnOptions } from '@/components/Table'
 import Vue from 'vue'
 import { expect } from 'chai'
 import * as sinon from 'sinon'
 import { mount } from 'vue-test-utils'
+import { setTimeout } from 'timers';
 
 const columns: Array<ColumnOptions> = [
   {
@@ -116,6 +117,12 @@ describe('Table.vue', () => {
     })
   })
 
+  async function wait (time: number) {
+    return new Promise ((resolve) => {
+      setTimeout(resolve, time)
+    })
+  }
+
   describe('filter', () => {
     it('should remove some rows when filtering', async () => {
       columns[0].filterable = true
@@ -129,9 +136,8 @@ describe('Table.vue', () => {
       e.initEvent('input', false, true)
       searchElt.dispatchEvent(e)
       await sut.vm.$nextTick()
-      setTimeout(() => {
-        expect(sut.element.querySelectorAll('tbody tr').length).to.be.below(rows.length).and.above(1)
-      }, 420)
+      await wait(420)
+      expect(sut.element.querySelectorAll('tbody tr').length).to.be.below(rows.length).and.above(1)
     })
   })
 })

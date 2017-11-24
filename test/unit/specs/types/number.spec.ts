@@ -1,4 +1,4 @@
-import numberType from '../../../../src/components/types/number'
+import numberType from '@/components/types/number'
 import { expect } from 'chai'
 
 describe('number type', () => {

@@ -1,4 +1,4 @@
-import percentageType from '../../../../src/components/types/percentage'
+import percentageType from '@/components/types/percentage'
 import { expect } from 'chai'
 
 describe('percentage type', () => {

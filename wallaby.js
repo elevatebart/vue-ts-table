@@ -1,16 +1,18 @@
 const wallabyWebpack = require('wallaby-webpack')
 var webpackConfig = require('./build/webpack.test.conf')
 
-module.exports = function () {
+module.exports = function (wallaby) {
+  webpackConfig.resolve.alias = {'@': require('path').join(wallaby.projectCacheDir, 'src')}
+  webpackConfig.module.rules.find(r => r.loader === 'vue-loader').options.loaders.jss = ''
   const wallabyPostprocessor = wallabyWebpack(webpackConfig)
 
   return {
     files: [
-      {pattern: 'src/images/*'},
-      {pattern: 'src/components/types/*.ts', load: false},
-      {pattern: 'src/components/*.ts', load: false}
+      {pattern: 'src/**/*.*', load: false}
     ],
-
+    compilers: {
+      '**/*.vue': require('wallaby-vue-compiler')
+    },
     env: {
       kind: 'chrome'
     },

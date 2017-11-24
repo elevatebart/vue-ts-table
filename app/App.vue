@@ -17,12 +17,11 @@
 
 <script>
 import Vue from "vue";
-import { VueTsTable } from "../src/index";
+import VueTsTable from "../src/index";
+
+Vue.use(VueTsTable)
 
 export default {
-  components: {
-    VueTsTable
-  },
   name: "test",
   data() {
     return {

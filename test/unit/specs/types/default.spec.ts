@@ -1,4 +1,4 @@
-import defaultType from '../../../../src/components/types/default'
+import defaultType from '@/components/types/default'
 import { expect } from 'chai'
 
 describe('default type', () => {

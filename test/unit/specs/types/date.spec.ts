@@ -1,6 +1,6 @@
 import dateType from '../../../../src/components/types/date'
 import { expect } from 'chai'
-import { ColumnOptions } from 'components/table'
+import { ColumnOptions } from '@/components/table'
 
 describe('date type', () => {
   let colopt: ColumnOptions
