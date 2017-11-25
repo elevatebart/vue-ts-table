@@ -1,7 +1,6 @@
 import { VueTsTable, ColumnOptions } from '@/components/table'
-import { expect } from 'chai'
-import { stub } from 'sinon'
 import { mount } from 'vue-test-utils'
+import { stub } from 'sinon'
 
 const columns: Array<ColumnOptions> = [
   {
@@ -14,6 +13,7 @@ const columns: Array<ColumnOptions> = [
     type: 'number'
   }
 ]
+
 const rows = [
   {name: 'John', age: '20'},
   {name: 'Jane', age: '24'},
@@ -37,7 +37,7 @@ describe('VueTsTable', () => {
     })
     await sut.vm.$nextTick()
     let tableRows = sut.element.querySelectorAll('tbody tr')
-    expect(tableRows.length).to.equal(rows.length)
+    tableRows.length.should.equal(rows.length)
   })
 
   describe('global search', () => {
@@ -60,7 +60,7 @@ describe('VueTsTable', () => {
       searchElt.dispatchEvent(e)
       await sut.vm.$nextTick()
       let tableRows = sut.element.querySelectorAll('tbody tr')
-      expect(tableRows.length).to.below(rows.length)
+      tableRows.length.should.be.below(rows.length)
     })
   })
 
@@ -80,7 +80,7 @@ describe('VueTsTable', () => {
       await sut.vm.$nextTick()
       sut.vm.sort(1)
       await sut.vm.$nextTick()
-      expect(compareSpy.callCount).to.above(rows.length - 2)
+      compareSpy.should.be.above(rows.length - 2)
     })
 
     it('should sort on the default by default', async () => {
@@ -91,7 +91,7 @@ describe('VueTsTable', () => {
       }
       })
       await sut.vm.$nextTick()
-      expect(sut.vm.sortColumn).to.equal(1)
+      sut.vm.sortColumn.should.equal(1)
     })
 
     it('should call sort if click on first header item', async () => {
@@ -103,7 +103,7 @@ describe('VueTsTable', () => {
         elt.click()
       }
       await sut.vm.$nextTick()
-      expect(sortSpy.calledWith(0)).to.equal(true)
+      sortSpy.calledWith(0).should.equal(true)
     })
 
     it('should call sort if click on second header item', async () => {
@@ -115,7 +115,7 @@ describe('VueTsTable', () => {
         elt.click()
       }
       await sut.vm.$nextTick()
-      expect(sortSpy.calledWith(1)).to.equal(true)
+      sortSpy.calledWith(1).should.equal(true)
     })
   })
 
@@ -142,7 +142,7 @@ describe('VueTsTable', () => {
       searchElt.dispatchEvent(e)
       await sut.vm.$nextTick()
       await wait(420)
-      expect(sut.element.querySelectorAll('tbody tr').length).to.be.below(rows.length).and.above(1)
+      sut.element.querySelectorAll('tbody tr').length.should.be.below(rows.length).and.above(1)
     })
   })
 })
