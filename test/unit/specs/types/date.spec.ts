@@ -11,6 +11,7 @@ describe('date type', () => {
       type: 'date'
     }
   })
+
   describe('compare', () => {
     it('should compare dates correctly', () => {
       expect(dateType.compare('20001211', '20001112')).to.equal(1)
@@ -43,6 +44,12 @@ describe('date type', () => {
       colopt.inputFormat = 'YYYYMMDD'
       colopt.outputFormat = 'Do MMM YYYY'
       expect(dateType.format('20001012', colopt)).to.equal('12th Oct 2000')
+    })
+  })
+
+  describe('filterPredicate', () => {
+    it('should return true if values are the same', () => {
+      expect(dateType.filterPredicate('20001012', '20001211')).to.equal(false)
     })
   })
 })
