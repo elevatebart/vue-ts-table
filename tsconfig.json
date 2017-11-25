@@ -11,6 +11,7 @@
     "moduleResolution": "node",
     "noImplicitThis": true,
     "noImplicitAny": true,
+    "declaration": true,
     "typeRoots": [
       "node_modules/@types"
     ]
