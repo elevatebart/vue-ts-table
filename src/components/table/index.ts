@@ -78,7 +78,7 @@ export class VueTsTable extends Vue {
   @Prop()
   searchTrigger: string
   @Prop()
-  externalSearchQuery: string
+  externalSearchQuery?: string
 
   // text options
   @Prop({default: 'Search Table'})
@@ -153,39 +153,26 @@ export class VueTsTable extends Vue {
   }
 
   // field can be:
-  // 1. function
-  // 2. regular property - ex: 'prop'
-  // 3. nested property path - ex: 'nested.prop'
-  collect (obj: any, field: string) {
-
-    // utility function to get nested property
-    function dig (obj: any, selector: string): any {
-      let result = obj
-      const splitter = selector.split('.')
-      for (let i = 0; i < splitter.length; i++) {
-        if (typeof(result) === 'undefined') {
-          return undefined
-        } else {
-          result = result[splitter[i]]
-        }
+  // 1. regular property - ex: 'prop'
+  // 2. nested property path - ex: 'nested.prop'
+  collect (obj: any, field: string): any {
+    let result = obj
+    const splitter = field.split('.')
+    for (let i = 0; i < splitter.length; i++) {
+      if (typeof(result) === 'undefined') {
+        return undefined
+      } else {
+        result = result[splitter[i]]
       }
-      return result
     }
-
-    if (typeof(field) === 'function') {
-      return field(obj)
-    } else if (typeof(field) === 'string') {
-      return dig(obj, field)
-    } else {
-      return undefined
-    }
+    return result
   }
 
   collectFormatted (obj: any, column: ColumnOptions): string {
     let value = this.collect(obj, column.field)
 
     if (value === undefined) return ''
-      // lets format the resultant data
+    // lets format the resultant data
     let type = column.type ? this.dataTypes[column.type] || defaultType : defaultType
     return type.format(value, column)
   }
@@ -193,9 +180,7 @@ export class VueTsTable extends Vue {
   formattedRow (row: {[field: string]: any}): {[field: string]: string} {
     let formattedRow: {[field: string]: string} = {}
     for (const col of this.columns) {
-      if (col.field) {
-        formattedRow[col.field] = this.collectFormatted(row, col)
-      }
+      formattedRow[col.field] = this.collectFormatted(row, col)
     }
     return formattedRow
   }
@@ -235,10 +220,9 @@ export class VueTsTable extends Vue {
   // since vue doesn't detect property addition and deletion, we
   // need to create helper function to set property etc
   updateFilters (column: ColumnOptions, value: any) {
-    const _this = this
     if (this.timer) clearTimeout(this.timer)
-    this.timer = setTimeout(function () {
-      _this.$set(_this.columnFilters, column.field, value)
+    this.timer = setTimeout(() => {
+      this.$set(this.columnFilters, column.field, value)
     }, 400)
 
   }
@@ -253,16 +237,16 @@ export class VueTsTable extends Vue {
 
     if (this.hasFilterRow) {
       for (let col of this.columns) {
-        if (col.filterable && this.columnFilters[col.field]) {
+        let field = col.field
+        if (col.filterable && this.columnFilters[field]) {
           computedRows = computedRows.filter((row: {[field: string]: any}) => {
-
-            // If column has a custom filter, use that.
+              // If column has a custom filter, use that.
             if (col.filter) {
-              return col.filter(this.collect(row, col.field), this.columnFilters[col.field])
+              return col.filter(this.collect(row, col.field), this.columnFilters[field])
             } else {
-              // Use default filters
+                // Use default filters
               let type = col.type ? this.dataTypes[col.type] || defaultType : defaultType
-              return type.filterPredicate(this.collect(row, col.field), this.columnFilters[col.field])
+              return type.filterPredicate(this.collect(row, col.field), this.columnFilters[field])
             }
           })
         }
@@ -308,10 +292,10 @@ export class VueTsTable extends Vue {
 
   // computed
   get searchTerm () {
-    return (this.externalSearchQuery != null) ? this.externalSearchQuery : this.globalSearchTerm
+    return (this.externalSearchQuery !== undefined) ? this.externalSearchQuery : this.globalSearchTerm
   }
 
-    //
+  //
   get globalSearchAllowed () {
     if (this.globalSearch
         && !!this.globalSearchTerm
@@ -319,7 +303,7 @@ export class VueTsTable extends Vue {
       return true
     }
 
-    if (this.externalSearchQuery != null
+    if (this.externalSearchQuery !== undefined
          && this.searchTrigger !== 'enter') {
       return true
     }

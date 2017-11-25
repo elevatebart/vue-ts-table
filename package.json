@@ -11,7 +11,7 @@
     "build": "cross-env BABEL_ENV=library node build/build.js",
     "unit": "cross-env BABEL_ENV=test karma start test/unit/karma.conf.js --single-run",
     "test": "npm run unit",
-    "tslint": "tslint -s node_modules/custom-tslint-formatters/formatters -t grouped 'src/**/*.ts' 'test/unit/**/*.ts'"
+    "tslint": "tslint -s node_modules/custom-tslint-formatters/formatters -p './tsconfig.json' -t grouped 'src/**/*.ts' 'test/unit/**/*.ts'"
   },
   "dependencies": {
     "moment": "^2.19.2",

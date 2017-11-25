@@ -31,6 +31,6 @@ declare module '*.css' {
 }
 
 declare module '*M.svg' {
-  const path:string;
-  export default path; 
+  const path: string
+  export default path
 }

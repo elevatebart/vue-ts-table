@@ -15,6 +15,6 @@ export {
 /*
  * The plugin is automatically installed when loaded in browser (not as module).
  */
-if (typeof window !== 'undefined' && (window as any).Vue) {
+if ((window as any).Vue) {
   ((window as any).Vue as typeof Vue).use(TsTablePlugin)
 }
