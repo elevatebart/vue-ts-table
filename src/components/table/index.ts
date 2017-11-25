@@ -21,7 +21,7 @@ export interface AbstractType {
 
 export interface ColumnOptions {
   label: string
-  field: string
+  field?: string
   type?: string
   sortable?: boolean
   filterable?: boolean
@@ -30,6 +30,11 @@ export interface ColumnOptions {
   placeholder?: string
   inputFormat?: string
   outputFormat?: string
+}
+
+interface SafeColumnOptions extends ColumnOptions {
+  field: string
+  type: string
 }
 
 @WithRender
@@ -108,6 +113,7 @@ export class VueTsTable extends Vue {
   forceSearch: boolean = false
   sortChanged: boolean = false
   dataTypes: {[typeName: string]: AbstractType} = dataTypes || {}
+  private safeColumns: SafeColumnOptions[] = this.makeSafeColumns()
 
   created () {
     if (this.customTypes) {
@@ -169,7 +175,7 @@ export class VueTsTable extends Vue {
   }
 
   collectFormatted (obj: any, column: ColumnOptions): string {
-    let value = this.collect(obj, column.field)
+    let value = this.collect(obj, column.field || '')
 
     if (value === undefined) return ''
     // lets format the resultant data
@@ -179,7 +185,7 @@ export class VueTsTable extends Vue {
 
   formattedRow (row: {[field: string]: any}): {[field: string]: string} {
     let formattedRow: {[field: string]: string} = {}
-    for (const col of this.columns) {
+    for (const col of this.safeColumns) {
       formattedRow[col.field] = this.collectFormatted(row, col)
     }
     return formattedRow
@@ -222,7 +228,7 @@ export class VueTsTable extends Vue {
   updateFilters (column: ColumnOptions, value: any) {
     if (this.timer) clearTimeout(this.timer)
     this.timer = setTimeout(() => {
-      this.$set(this.columnFilters, column.field, value)
+      this.$set(this.columnFilters, column.field || '', value)
     }, 400)
 
   }
@@ -236,7 +242,7 @@ export class VueTsTable extends Vue {
     }
 
     if (this.hasFilterRow) {
-      for (let col of this.columns) {
+      for (let col of this.safeColumns) {
         let field = col.field
         if (col.filterable && this.columnFilters[field]) {
           computedRows = computedRows.filter((row: {[field: string]: any}) => {
@@ -361,12 +367,12 @@ export class VueTsTable extends Vue {
       this.sortChanged = false
 
       computedRows = computedRows.sort((x,y) => {
-        if (!this.columns[this.sortColumn]) {
+        if (!this.safeColumns[this.sortColumn]) {
           return 0
         }
 
-        let xvalue = this.collect(x, this.columns[this.sortColumn].field)
-        let yvalue = this.collect(y, this.columns[this.sortColumn].field)
+        let xvalue = this.collect(x, this.safeColumns[this.sortColumn].field)
+        let yvalue = this.collect(y, this.safeColumns[this.sortColumn].field)
         let type = this.columns[this.sortColumn].type
         let dtype = type ? this.dataTypes[type] || defaultType : defaultType
         return dtype.compare(xvalue, yvalue, this.columns[this.sortColumn])
@@ -434,5 +440,15 @@ export class VueTsTable extends Vue {
         }
       }
     }
+  }
+
+  private makeSafeColumns (): SafeColumnOptions[] {
+    let cols: SafeColumnOptions[] = []
+    for (let c of this.columns) {
+      c.field = c.field || ''
+      c.type = c.type || 'default'
+      cols.push(Object.assign(c))
+    }
+    return cols
   }
 }
