@@ -80,7 +80,7 @@ describe('VueTsTable', () => {
       await sut.vm.$nextTick()
       sut.vm.sort(1)
       await sut.vm.$nextTick()
-      compareSpy.should.be.above(rows.length - 2)
+      compareSpy.callCount.should.be.above(rows.length - 2)
     })
 
     it('should sort on the default by default', async () => {
