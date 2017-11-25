@@ -6,9 +6,9 @@ import defaultType from '../types/default'
 import WithRender from './template.html?style=./style.css'
 
 let dataTypes: {[typeName: string]: AbstractType} = {}
-let coreDataTypes = require.context('../types', false, /^\.\/([\w-_]+)\.js$/)
+let coreDataTypes = require.context('../types', false, /^\.\/([\w-_]+)\.ts$/)
 for (let key of coreDataTypes.keys()) {
-  let compName = key.replace(/^\.\//, '').replace(/\.js/, '')
+  let compName = key.replace(/^\.\//, '').replace(/\.ts/, '')
   dataTypes[compName] = coreDataTypes(key).default
 }
 
