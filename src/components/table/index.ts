@@ -21,7 +21,7 @@ export interface AbstractType {
 
 export interface ColumnOptions {
   label: string
-  field?: string
+  field: string
   type?: string
   sortable?: boolean
   filterable?: boolean
@@ -104,7 +104,7 @@ export class VueTsTable extends Vue {
   globalSearchTerm: string = ''
   columnFilters: {[key: string]: string} = {}
   filteredRows: Array<{[key: string]: any}> = []
-  timer: NodeJS.Timer = undefined
+  timer: NodeJS.Timer
   forceSearch: boolean = false
   sortChanged: boolean = false
   dataTypes: {[typeName: string]: AbstractType} = dataTypes || {}
@@ -186,7 +186,7 @@ export class VueTsTable extends Vue {
 
     if (value === undefined) return ''
       // lets format the resultant data
-    let type = this.dataTypes[column.type] || defaultType
+    let type = column.type ? this.dataTypes[column.type] || defaultType : defaultType
     return type.format(value, column)
   }
 
@@ -221,7 +221,7 @@ export class VueTsTable extends Vue {
   // Get classes for the given column index & element.
   getClasses (index: number, element: string) {
     const { type, [element + 'Class']: custom } = this.columns[index]
-    let dtype = this.dataTypes[type] || defaultType
+    let dtype = type ? this.dataTypes[type] || defaultType : defaultType
     let isRight = dtype.isRight
     if (this.rtl) isRight = true
     const classes = {
@@ -261,7 +261,7 @@ export class VueTsTable extends Vue {
               return col.filter(this.collect(row, col.field), this.columnFilters[col.field])
             } else {
               // Use default filters
-              let type = this.dataTypes[col.type] || defaultType
+              let type = col.type ? this.dataTypes[col.type] || defaultType : defaultType
               return type.filterPredicate(this.collect(row, col.field), this.columnFilters[col.field])
             }
           })
@@ -383,9 +383,9 @@ export class VueTsTable extends Vue {
 
         let xvalue = this.collect(x, this.columns[this.sortColumn].field)
         let yvalue = this.collect(y, this.columns[this.sortColumn].field)
-
-        let type = this.dataTypes[this.columns[this.sortColumn].type] || defaultType
-        return type.compare(xvalue, yvalue, this.columns[this.sortColumn])
+        let type = this.columns[this.sortColumn].type
+        let dtype = type ? this.dataTypes[type] || defaultType : defaultType
+        return dtype.compare(xvalue, yvalue, this.columns[this.sortColumn])
             * (this.sortType === 'desc' ? -1 : 1)
       })
     }

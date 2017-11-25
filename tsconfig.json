@@ -12,6 +12,7 @@
     "noImplicitThis": true,
     "noImplicitAny": true,
     "declaration": true,
+    "strictNullChecks": true,
     "typeRoots": [
       "node_modules/@types"
     ]
