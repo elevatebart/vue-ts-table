@@ -8,6 +8,7 @@ module.exports = function (wallaby) {
 
   return {
     files: [
+      {pattern: 'node_modules/chai/chai.js', instrument: false},
       {pattern: 'src/**/*.*', load: false}
     ],
     compilers: {
@@ -28,6 +29,8 @@ module.exports = function (wallaby) {
 
     setup: function () {
       window.__moduleBundler.loadTests()
+      window.expect = chai.expect;
+      var should = chai.should();
     }
   }
 }
