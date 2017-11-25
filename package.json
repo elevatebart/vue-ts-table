@@ -5,6 +5,8 @@
   "author": "Bart Ledoux <ledouxb@gmail.com>",
   "private": true,
   "main": "dist/vue-ts-table.js",
+  "typings": "dist/types/index.d.ts",
+  "types": "dist/types/index.d.ts",
   "scripts": {
     "dev": "node build/dev-server.js",
     "start": "node build/dev-server.js",

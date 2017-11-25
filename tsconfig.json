@@ -3,19 +3,21 @@
     "src/**/*.*"    
   ],
   "compilerOptions": {
-    "outDir": "dist",
+    "module": "commonjs",
+    "target": "es2015",
+    "lib": ["dom", "es6", "es2015", "es2016", "es2017"],
+    "rootDir": "src",
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"]
     },
     "sourceMap": true,
     "experimentalDecorators": true,
-    "target": "es6",
-    "module": "es2015",
     "moduleResolution": "node",
     "noImplicitThis": true,
     "noImplicitAny": true,
     "declaration": true,
+    "declarationDir": "types",
     "strictNullChecks": true,
     "typeRoots": [
       "node_modules/@types"

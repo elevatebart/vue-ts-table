@@ -104,4 +104,10 @@ const webpackMinifiedConfig = merge(webpackConfig, {
   ]
 })
 
+// enable type generation dist/types/d.ts
+let rule = webpackMinifiedConfig.module.rules
+  .find((r) => r.test.test('aa.ts') && !r.loader)
+rule.use.find((l) => l.loader === 'ts-loader')
+  .options.transpileOnly = false
+
 module.exports = [webpackConfig, webpackMinifiedConfig]
