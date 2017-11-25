@@ -23,5 +23,3 @@ npm run unit
 # run all tests
 npm test
 ```
-
-For a detailed explanation on how things work, check out the [guide](http://toilal.github.io/vue-webpack-template/).

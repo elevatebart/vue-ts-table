@@ -60,7 +60,7 @@ describe('VueTsTable', () => {
       searchElt.dispatchEvent(e)
       await sut.vm.$nextTick()
       let tableRows = sut.element.querySelectorAll('tbody tr')
-      tableRows.length.should.be.below(rows.length)
+      expect(tableRows.length).to.below(rows.length)
     })
   })
 
