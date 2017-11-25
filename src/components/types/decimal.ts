@@ -1,4 +1,3 @@
-import { AbstractType, ColumnOptions } from '@/components/table'
 import { NumberType } from './number'
 
 export class DecimalType extends NumberType {

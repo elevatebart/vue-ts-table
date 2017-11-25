@@ -24,8 +24,6 @@ module.exports = {
       '@': resolve('src')
     },
     modules: [
-      resolve('src'),
-      resolve('app'),
       "node_modules"
     ]
   },
@@ -38,7 +36,9 @@ module.exports = {
         include: [resolve('src'), resolve('app'), resolve('test')],
         options: {
           formatter: 'grouped',
-          formattersDirectory: 'node_modules/custom-tslint-formatters/formatters'
+          formattersDirectory: 'node_modules/custom-tslint-formatters/formatters',
+          typeCheck: true,
+          tsConfigFile: '../tsconfig.json'
         }
       },
       {

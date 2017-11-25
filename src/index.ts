@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import { ColumnOptions, VueTsTable } from './components/Table'
+import { ColumnOptions, VueTsTable } from './components/table'
 
 export default class TsTablePlugin {
   static install (V: typeof Vue) {
@@ -13,8 +13,8 @@ export {
 }
 
 /*
-* The plugin is automatically installed when loaded in browser (not as module).
-*/
-if (typeof window !== 'undefined' && window['Vue']) {
-  (window['Vue'] as typeof Vue).use(TsTablePlugin)
+ * The plugin is automatically installed when loaded in browser (not as module).
+ */
+if (typeof window !== 'undefined' && (window as any).Vue) {
+  ((window as any).Vue as typeof Vue).use(TsTablePlugin)
 }

@@ -1,4 +1,4 @@
-import { AbstractType, ColumnOptions } from '@/components/table'
+import { AbstractType } from '@/components/table'
 
 export class DefaultType implements AbstractType {
   isRight: false

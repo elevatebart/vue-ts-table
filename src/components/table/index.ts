@@ -126,7 +126,6 @@ export class VueTsTable extends Vue {
   }
 
   sort (index: number) {
-    console.log('sort')
     if (!this.isSortableColumn(index)) {
       return
     }

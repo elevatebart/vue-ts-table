@@ -1,9 +1,7 @@
-import { VueTsTable, ColumnOptions } from '@/components/Table'
-import Vue from 'vue'
+import { VueTsTable, ColumnOptions } from '@/components/table'
 import { expect } from 'chai'
-import * as sinon from 'sinon'
+import { stub } from 'sinon'
 import { mount } from 'vue-test-utils'
-import { setTimeout } from 'timers';
 
 const columns: Array<ColumnOptions> = [
   {
@@ -29,7 +27,7 @@ const rows = [
   {name: 'Dan', age: '40'}
 ]
 
-describe('Table.vue', () => {
+describe('VueTsTable', () => {
   it('should render correct contents', async () => {
     const title = 'Good table'
     const sut = mount<VueTsTable>(VueTsTable, {propsData: {
@@ -65,14 +63,14 @@ describe('Table.vue', () => {
 
   describe('sort', () => {
     it('should call compare once per combination (touch each value once)', async () => {
-      let compareSpy = sinon.stub()
+      let compareSpy = stub()
       const sut = mount<VueTsTable>(VueTsTable, {propsData: {
         rows: rows,
         columns: columns,
         customTypes: {
           number: {
             compare: compareSpy,
-            format: sinon.stub()
+            format: stub()
           }
         }
       }})
@@ -95,7 +93,7 @@ describe('Table.vue', () => {
 
     it('should call sort if click on first header item', async () => {
       const sut = mount<VueTsTable>(VueTsTable, {propsData: {rows: rows, columns: columns}})
-      let sortSpy = sinon.stub(sut.vm, 'sort')
+      let sortSpy = stub(sut.vm, 'sort')
       await sut.vm.$nextTick()
       let elt = sut.element.querySelector('thead th')
       if (elt instanceof HTMLElement) {
@@ -107,13 +105,14 @@ describe('Table.vue', () => {
 
     it('should call sort if click on second header item', async () => {
       const sut = mount<VueTsTable>(VueTsTable, { propsData: {rows: rows, columns: columns}})
-      let sortSpy = sinon.stub(sut.vm, 'sort')
+      let sortSpy = stub(sut.vm, 'sort')
       await sut.vm.$nextTick()
       let elt = sut.element.querySelector('thead th:nth-child(2)')
       if (elt instanceof HTMLElement) {
         elt.click()
       }
       await sut.vm.$nextTick()
+      expect(sortSpy.calledWith(1)).to.equal(true)
     })
   })
 
