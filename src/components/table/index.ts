@@ -26,6 +26,7 @@ export interface ColumnOptions {
   sortable?: boolean
   filterable?: boolean
   filter?: (rowval: string, filter: string) => boolean
+  filterOptions?: string[] | number[] | Array<{value: string|number, text: string}>
   placeholder?: string
   inputFormat?: string
   outputFormat?: string

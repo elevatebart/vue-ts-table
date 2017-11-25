@@ -61,7 +61,7 @@
                       v-on:input="updateFilters(column, $event.target.value)" />
     
                     <!-- options are a list of primitives -->
-                    <select v-if="column.filterDropdown && typeof(column.filterOptions[0]) !== 'object'"
+                    <select v-if="column.filterDropdown && (typeof column.filterOptions[0] === 'string' || typeof column.filterOptions[0] === 'number')"
                       class=""
                       :value="columnFilters[column.field]"
                       v-on:input="updateFilters(column, $event.target.value)">
@@ -82,7 +82,7 @@
                       <option value="">{{ getPlaceholder(column) }}</option>
                       <option 
                         v-for="option in column.filterOptions"
-                        :key="option"
+                        :key="option.value"
                         :value="option.value">{{ option.text }}</option>
                     </select>
                   </div>

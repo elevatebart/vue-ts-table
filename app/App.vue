@@ -15,14 +15,13 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import Vue from "vue";
 import VueTsTable from "../src/index";
 
 Vue.use(VueTsTable)
 
 export default {
-  name: "test",
   data() {
     return {
       columns: [
@@ -56,8 +55,8 @@ export default {
           html: false,
           filterable: true,
           filterDropdown: true,
-          filterOptions: [{value:'1', text:'Over 50'}, {value:'2', text:'Under 50'}],
-          filter: function myCustomFilter(rowval, fil){
+          filterOptions: [{value:1, text:'Over 50'}, {value:2, text:'Under 50'}],
+          filter: function myCustomFilter(rowval: number, fil: string){
             return (fil === '1' && rowval > .5) || (fil === '2' && rowval <= .5)
           }
         },
