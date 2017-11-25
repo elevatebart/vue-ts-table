@@ -18,9 +18,9 @@ export interface PerPageChangedEvent {
 export class VueTsPagination extends Vue {
   @Prop({default: 'table table-bordered'})
   styleClass: string
-  @Prop()
+  @Prop({required: true})
   total: number
-  @Prop()
+  @Prop({required: true})
   perPage: number
   @Prop({default: false})
   rtl: boolean
