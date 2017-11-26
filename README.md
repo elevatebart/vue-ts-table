@@ -1,3 +1,5 @@
+[![Travis Build Status](https://travis-ci.org/elevatebart/vue-ts-table.svg?branch=master)](https://travis-ci.org/elevatebart/vue-ts-table)
+
 # vue-ts-table
 
 > A table component based on vue-good-table

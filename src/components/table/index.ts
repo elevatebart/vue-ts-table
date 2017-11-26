@@ -4,12 +4,16 @@ import { Prop, Watch } from 'vue-property-decorator'
 import { VueTsPagination, PageChangedEvent, PerPageChangedEvent } from '@/components/pagination'
 import defaultType from '../types/default'
 import WithRender from './template.html?style=./style.css'
+import dateType from '../types/date'
+import numberType from '../types/number'
+import percentageType from '../types/percentage'
+import decimalType from '../types/decimal'
 
-let dataTypes: {[typeName: string]: AbstractType} = {}
-let coreDataTypes = require.context('../types', false, /^\.\/([\w-_]+)\.ts$/)
-for (let key of coreDataTypes.keys()) {
-  let compName = key.replace(/^\.\//, '').replace(/\.ts/, '')
-  dataTypes[compName] = coreDataTypes(key).default
+let dataTypes: {[typeName: string]: AbstractType} = {
+  'date': dateType,
+  'number': numberType,
+  'percentage': percentageType,
+  'decimal': decimalType
 }
 
 export interface AbstractType {
