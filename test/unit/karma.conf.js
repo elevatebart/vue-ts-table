@@ -33,17 +33,6 @@ module.exports = function (config) {
       'text-summary': null,
       lcovonly: './test/unit/coverage/lcov.info',
       html: './test/unit/coverage/lcov-report'
-    },
-    
-    // make sure both reporter plugins are loaded 
-    plugins: ['karma-webpack', 
-      'karma-sourcemap-loader', 
-      'karma-coverage', 
-      'karma-remap-coverage',
-      'karma-mocha',
-      'karma-chrome-launcher',
-      'karma-spec-reporter',
-      'karma-sinon-chai'
-    ]
+    }
   })
 }
