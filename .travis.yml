@@ -12,4 +12,4 @@ script:
   - npm run build
   - npm run test
 after_success:
-  - ./cc-test-reporter after-build -p 'test/unit' --debug --exit-code $TRAVIS_TEST_RESULT
+  - ./cc-test-reporter after-build -p './test/unit/' -t lcov --debug --exit-code $TRAVIS_TEST_RESULT
