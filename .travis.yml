@@ -1,4 +1,3 @@
-
 env:
   global:
     - CC_TEST_REPORTER_ID=6a317872ebff9229dcad055329d566256e4b2798ccea65f34783f71246e041b0
@@ -13,4 +12,4 @@ script:
   - npm run build
   - npm run test
 after_success:
-  - ./cc-test-reporter after-build --debug --exit-code $TRAVIS_TEST_RESULT
+  - ./cc-test-reporter after-build -p 'test/unit' --debug --exit-code $TRAVIS_TEST_RESULT
