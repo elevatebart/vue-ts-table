@@ -12,5 +12,5 @@ script:
   - npm run build
   - npm run test
 after_success:
-  - ./cc-test-reporter format-coverage -t lcov 'test/unit/coverage/lcov.info' --exit-code $TRAVIS_TEST_RESULT
+  - ./cc-test-reporter format-coverage -t lcov 'test/unit/coverage/lcov.info'
   - ./cc-test-reporter upload-coverage
