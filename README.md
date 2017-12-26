@@ -1,5 +1,4 @@
 [![Travis Build Status](https://travis-ci.org/elevatebart/vue-ts-table.svg?branch=master)](https://travis-ci.org/elevatebart/vue-ts-table)
-[![Code Climate Test Coverage](https://api.codeclimate.com/v1/badges/41af191b330407e0c41a/test_coverage)](https://codeclimate.com/github/elevatebart/vue-ts-table/test_coverage)
 
 # vue-ts-table
 
