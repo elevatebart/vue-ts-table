@@ -100,7 +100,7 @@
                 <slot name="table-row-before" :row="row" :index="index"></slot>
                 <slot name="table-row" :row="row" :formattedRow="formattedRow(row)" :index="index">
                   <td 
-                    v-for="(column, i) in columns"
+                    v-for="(column, i) in safeColumns"
                     :key="column.field" 
                     :class="getClasses(i, 'td')"
                     v-if="!column.hidden && column.field">

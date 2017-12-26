@@ -10,6 +10,7 @@ import percentageType from '../types/percentage'
 import decimalType from '../types/decimal'
 
 let dataTypes: {[typeName: string]: AbstractType} = {
+  'default': defaultType,
   'date': dateType,
   'number': numberType,
   'percentage': percentageType,
@@ -36,7 +37,7 @@ export interface ColumnOptions {
   outputFormat?: string
 }
 
-interface SafeColumnOptions extends ColumnOptions {
+export interface SafeColumnOptions extends ColumnOptions {
   field: string
   type: string
 }
@@ -118,6 +119,7 @@ export class VueTsTable extends Vue {
   sortChanged: boolean = false
   dataTypes: {[typeName: string]: AbstractType} = dataTypes || {}
   private safeColumns: SafeColumnOptions[] = this.makeSafeColumns()
+  private searchTermLowerCase: string
 
   created () {
     if (this.customTypes) {
@@ -178,13 +180,14 @@ export class VueTsTable extends Vue {
     return result
   }
 
-  collectFormatted (obj: any, column: ColumnOptions): string {
+  collectFormatted (obj: any, column: SafeColumnOptions, toLowerCase = false): string {
     let value = this.collect(obj, column.field || '')
+    if (!value) return ''
 
-    if (value === undefined) return ''
     // lets format the resultant data
-    let type = column.type ? this.dataTypes[column.type] || defaultType : defaultType
-    return type.format(value, column)
+    let type = this.dataTypes[column.type]
+    let txtVal = type.format(value, column)
+    return toLowerCase ? txtVal.toLowerCase() : txtVal
   }
 
   formattedRow (row: {[field: string]: any}): {[field: string]: string} {
@@ -195,7 +198,7 @@ export class VueTsTable extends Vue {
     return formattedRow
   }
 
-    // Check if a column is sortable.
+  // Check if a column is sortable.
   isSortableColumn (index: number) {
     const sortable = this.columns[index].sortable
     const isSortable = typeof sortable === 'boolean' ? sortable : this.sortable
@@ -215,9 +218,8 @@ export class VueTsTable extends Vue {
 
   // Get classes for the given column index & element.
   getClasses (index: number, element: string) {
-    const { type, [element + 'Class']: custom } = this.columns[index]
-    let dtype = type ? this.dataTypes[type] || defaultType : defaultType
-    let isRight = dtype.isRight
+    const { type, [element + 'Class']: custom } = this.safeColumns[index]
+    let isRight = this.dataTypes[type].isRight
     if (this.rtl) isRight = true
     const classes = {
       'right-align': isRight,
@@ -234,7 +236,6 @@ export class VueTsTable extends Vue {
     this.timer = setTimeout(() => {
       this.$set(this.columnFilters, column.field || '', value)
     }, 400)
-
   }
 
   // method to filter rows
@@ -250,14 +251,9 @@ export class VueTsTable extends Vue {
         let field = col.field
         if (col.filterable && this.columnFilters[field]) {
           computedRows = computedRows.filter((row: {[field: string]: any}) => {
-              // If column has a custom filter, use that.
-            if (col.filter) {
-              return col.filter(this.collect(row, col.field), this.columnFilters[field])
-            } else {
-                // Use default filters
-              let type = col.type ? this.dataTypes[col.type] || defaultType : defaultType
-              return type.filterPredicate(this.collect(row, col.field), this.columnFilters[field])
-            }
+            // If column has a custom filter, use that.
+            let filter = col.filter || this.dataTypes[col.type].filterPredicate
+            return filter(this.collect(row, col.field), this.columnFilters[field])
           })
         }
       }
@@ -305,7 +301,6 @@ export class VueTsTable extends Vue {
     return (this.externalSearchQuery !== undefined) ? this.externalSearchQuery : this.globalSearchTerm
   }
 
-  //
   get globalSearchAllowed () {
     if (this.globalSearch
         && !!this.globalSearchTerm
@@ -330,35 +325,50 @@ export class VueTsTable extends Vue {
   // make sure that there is atleast 1 column
   // that requires filtering
   get hasFilterRow () {
-    if (!this.globalSearch) {
-      for (let col of this.columns) {
-        if (col.filterable) {
-          return true
-        }
+    return !this.globalSearch && this.columns.some((col) => !!col.filterable)
+  }
+
+  globSearchPredicate (row: any): (c: any) => boolean {
+    return (c) => String(this.collectFormatted(row, c, true))
+        .search(this.searchTermLowerCase) > -1
+  }
+
+  globalSearchRows (): Array<{[key: string]: any}> {
+    this.searchTermLowerCase = this.searchTerm.toLowerCase()
+    let filteredRows = []
+    for (let row of this.rows) {
+      let localPredicate = this.globSearchPredicate(row)
+      if (this.columns.some(localPredicate)) {
+        filteredRows.push(row)
       }
     }
-    return false
+    return filteredRows
+  }
+
+  sortRows (computedRows: Array<{[key: string]: any}>): Array<{[key: string]: any}> {
+    let col = this.safeColumns[this.sortColumn]
+    return computedRows.sort((x,y) => {
+      if (!col) {
+        return 0
+      }
+
+      let xvalue = this.collect(x, col.field)
+      let yvalue = this.collect(y, col.field)
+      let type = col.type
+      return this.dataTypes[type].compare(xvalue, yvalue, col)
+          * (this.sortType === 'desc' ? -1 : 1)
+    })
   }
 
   // this is done everytime sortColumn
   // or sort type changes
   // ----------------------------------------
-  get processedRows () {
+  get processedRows (): Array<{[key: string]: any}> {
     let computedRows = this.filteredRows
 
-      // take care of the global filter here also
+    // take care of the global filter here also
     if (this.globalSearchAllowed) {
-      let filteredRows = []
-      for (let row of this.rows) {
-        for (let col of this.columns) {
-          if (String(this.collectFormatted(row, col)).toLowerCase()
-                .search(this.searchTerm.toLowerCase()) > -1) {
-            filteredRows.push(row)
-            break
-          }
-        }
-      }
-      computedRows = filteredRows
+      computedRows = this.globalSearchRows()
     }
 
     // taking care of sort here only if sort has changed
@@ -367,25 +377,12 @@ export class VueTsTable extends Vue {
         // if search trigger is enter then we only sort
         // when enter is hit
         (this.searchTrigger !== 'enter' || this.sortChanged)) {
-
+      computedRows = this.sortRows(computedRows)
       this.sortChanged = false
-
-      computedRows = computedRows.sort((x,y) => {
-        if (!this.safeColumns[this.sortColumn]) {
-          return 0
-        }
-
-        let xvalue = this.collect(x, this.safeColumns[this.sortColumn].field)
-        let yvalue = this.collect(y, this.safeColumns[this.sortColumn].field)
-        let type = this.columns[this.sortColumn].type
-        let dtype = type ? this.dataTypes[type] || defaultType : defaultType
-        return dtype.compare(xvalue, yvalue, this.columns[this.sortColumn])
-            * (this.sortType === 'desc' ? -1 : 1)
-      })
     }
 
-      // if the filtering is event based, we need to maintain filter
-      // rows
+    // if the filtering is event based, we need to maintain filter
+    // rows
     if (this.searchTrigger === 'enter') {
       this.filteredRows = computedRows
     }
@@ -403,7 +400,7 @@ export class VueTsTable extends Vue {
       // not relevant anymore
       // also, if setting to all, current page will not be valid
       if (pageStart >= this.processedRows.length
-          || this.currentPerPage === -1) {
+        || this.currentPerPage === -1) {
         this.currentPage = 1
         pageStart = 0
       }
