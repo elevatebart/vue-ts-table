@@ -1,4 +1,6 @@
 [![Travis Build Status](https://travis-ci.org/elevatebart/vue-ts-table.svg?branch=master)](https://travis-ci.org/elevatebart/vue-ts-table)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/f8752d2ac98242a28efd1387b190d5fb)](https://www.codacy.com/app/elevatebart/vue-ts-table?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=elevatebart/vue-ts-table&amp;utm_campaign=Badge_Grade)
+[![Codacy Badge](https://api.codacy.com/project/badge/Coverage/f8752d2ac98242a28efd1387b190d5fb)](https://www.codacy.com/app/elevatebart/vue-ts-table?utm_source=github.com&utm_medium=referral&utm_content=elevatebart/vue-ts-table&utm_campaign=Badge_Coverage)
 
 # vue-ts-table
 
