@@ -1,0 +1,4 @@
+--webpack-config build/webpack.test.conf.js
+--require test/unit/setup.js
+--glob *.spec.{js,ts}
+--recursive
