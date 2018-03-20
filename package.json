@@ -11,9 +11,7 @@
     "dev": "node build/dev-server.js",
     "start": "node build/dev-server.js",
     "build": "cross-env BABEL_ENV=library node build/build.js",
-    "unit": "cross-env BABEL_ENV=test mocha-webpack --opts test/unit/mocha-webpack.opts",
-    "cover": "cross-env NODE_ENV=coverage nyc --reporter=lcov --reporter=text yarn unit",
-    "test": "npm run cover",
+    "test": "cross-env BABEL_ENV=test NODE_ENV=coverage nyc --reporter=lcov --reporter=text mocha-webpack --opts test/unit/mocha-webpack.opts",
     "tslint": "tslint -s node_modules/custom-tslint-formatters/formatters -p './tsconfig.json' -t grouped 'src/**/*.ts' 'test/unit/**/*.ts'"
   },
   "dependencies": {
