@@ -1,10 +1,13 @@
 'use strict'
 // This is the webpack config used for unit tests.
+var isCoverage = process.env.NODE_ENV === 'coverage';
 
 const utils = require('./utils')
 const webpack = require('webpack')
 const merge = require('webpack-merge')
+var nodeExternals = require('webpack-node-externals')
 const baseConfig = require('./webpack.base.conf')
+const path = require('path')
 
 const webpackConfig = merge(baseConfig, {
   entry: {
@@ -13,7 +16,6 @@ const webpackConfig = merge(baseConfig, {
   module: {
     rules: utils.styleLoaders()
   },
-  // use inline sourcemap for karma-sourcemap-loader
   
   resolveLoader: {
     alias: {
@@ -24,14 +26,11 @@ const webpackConfig = merge(baseConfig, {
   },
   plugins: [
     new webpack.DefinePlugin({
-      'process.env': require('../config/test.env')
-    }),
-    // devtool option doesn't output typescript sourcemaps to karma
-    new webpack.SourceMapDevToolPlugin({
-      filename: null, // if no value is provided the sourcemap is inlined
-      test: /\.(ts|js|html)($|\?)/i
+      'process.env': require(isCoverage ? '../config/coverage.env' : '../config/test.env')
     })
-  ]
+  ],
+  target: "node",
+  externals: [nodeExternals()]
 })
 
 // no need for app entry during tests

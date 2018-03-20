@@ -27,20 +27,9 @@ module.exports = {
       "node_modules"
     ]
   },
+  devtool: "inline-cheap-module-source-map",
   module: {
     rules: [
-      {
-        test: /\.ts$/, // tslint doesn't support vue files
-        enforce: 'pre',
-        loader: 'tslint-loader',
-        include: [resolve('src'), resolve('app'), resolve('test')],
-        options: {
-          formatter: 'grouped',
-          formattersDirectory: 'node_modules/custom-tslint-formatters/formatters',
-          typeCheck: true,
-          tsConfigFile: 'tsconfig.json'
-        }
-      },
       {
         test: /\.vue$/,
         loader: 'vue-loader',
