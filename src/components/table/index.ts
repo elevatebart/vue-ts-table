@@ -187,7 +187,7 @@ export class VueTsTable extends Vue {
     // lets format the resultant data
     let type = this.dataTypes[column.type]
     let txtVal = type.format(value, column)
-    return toLowerCase ? txtVal.toLowerCase() : txtVal
+    return toLowerCase && txtVal ? txtVal.toLowerCase() : txtVal
   }
 
   formattedRow (row: {[field: string]: any}): {[field: string]: string} {
