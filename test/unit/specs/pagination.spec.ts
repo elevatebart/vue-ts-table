@@ -1,5 +1,5 @@
 import { VueTsPagination } from '@/components/pagination'
-import { mount } from 'vue-test-utils'
+import { mount } from '@vue/test-utils'
 
 describe('VueTsPagination', () => {
   it('should render correct contents', async () => {
