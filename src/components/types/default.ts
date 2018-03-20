@@ -1,29 +1,25 @@
-import { AbstractType } from '@/components/table'
+import { AbstractType } from "@/components/table";
 
 export class DefaultType implements AbstractType {
-  isRight: false
+  isRight: false;
 
-  format (value: any): string {
-    return value.toString()
+  format(value: any): string {
+    return value.toString();
   }
 
-  compare (x: any, y: any): number {
-    function cook (d: any) {
-      return d.toLowerCase()
+  compare(x: any, y: any): number {
+    function cook(d: any) {
+      return d.toLowerCase();
     }
-    x = cook(x)
-    y = cook(y)
-    return (x < y ? -1 : (x > y ? 1 : 0))
+    x = cook(x);
+    y = cook(y);
+    return x < y ? -1 : x > y ? 1 : 0;
   }
 
-  filterPredicate (rowval: any, filter: string): boolean {
-    let v = rowval
-    .toLowerCase()
-    .startsWith(
-      (filter).toLowerCase()
-    )
-    return v
+  filterPredicate(rowval: any, filter: string): boolean {
+    let v = rowval.toLowerCase().startsWith(filter.toLowerCase());
+    return v;
   }
 }
 
-export default new DefaultType()
+export default new DefaultType();

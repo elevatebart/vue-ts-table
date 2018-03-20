@@ -1,102 +1,105 @@
-import Vue from 'vue'
-import Component from 'vue-class-component'
-import { Prop, Watch } from 'vue-property-decorator'
-import WithRender from './template.html?style=./style.css'
+import Vue from "vue";
+import Component from "vue-class-component";
+import { Prop, Watch } from "vue-property-decorator";
+import WithRender from "./template.html?style=./style.css";
 
 export interface PageChangedEvent {
-  currentPage: number
+  currentPage: number;
 }
 
 export interface PerPageChangedEvent {
-  currentPerPage: number
+  currentPerPage: number;
 }
 
 @WithRender
 @Component({
-  name: 'vue-ts-pagination'
+  name: "vue-ts-pagination"
 })
 export class VueTsPagination extends Vue {
-  @Prop({default: 'table table-bordered'})
-  styleClass: string
-  @Prop({required: true})
-  total: number
-  @Prop({required: true})
-  perPage: number
-  @Prop({default: false})
-  rtl: boolean
+  @Prop({ default: "table table-bordered" })
+  styleClass: string;
+  @Prop({ required: true })
+  total: number;
+  @Prop({ required: true })
+  perPage: number;
+  @Prop({ default: false })
+  rtl: boolean;
 
   // text options
-  @Prop({default: 'Next'})
-  nextText: string
-  @Prop({default: 'Prev'})
-  prevText: string
-  @Prop({default: 'Rows per page:'})
-  rowsPerPageText: string
-  @Prop({default: 'of'})
-  ofText: string
-  @Prop({default: 'All'})
-  allText: string
+  @Prop({ default: "Next" })
+  nextText: string;
+  @Prop({ default: "Prev" })
+  prevText: string;
+  @Prop({ default: "Rows per page:" })
+  rowsPerPageText: string;
+  @Prop({ default: "of" })
+  ofText: string;
+  @Prop({ default: "All" })
+  allText: string;
 
-  currentPage: number = 1
-  currentPerPage: number = 10
+  currentPage: number = 1;
+  currentPerPage: number = 10;
 
-  nextPage () {
-    if (this.currentPerPage === -1) return
+  nextPage() {
+    if (this.currentPerPage === -1) return;
     if (this.nextIsPossible) {
-      ++this.currentPage
+      ++this.currentPage;
     }
-    this.pageChanged()
+    this.pageChanged();
   }
 
-  previousPage () {
+  previousPage() {
     if (this.currentPage > 1) {
-      --this.currentPage
+      --this.currentPage;
     }
-    this.pageChanged()
+    this.pageChanged();
   }
 
-  pageChanged () {
-    this.$emit('page-changed', {currentPage: this.currentPage})
+  pageChanged() {
+    this.$emit("page-changed", { currentPage: this.currentPage });
   }
 
-  perPageChanged (event?: Event) {
+  perPageChanged(event?: Event) {
     if (event && event.target instanceof HTMLInputElement) {
-      this.currentPerPage = parseInt(event.target.value, 10)
+      this.currentPerPage = parseInt(event.target.value, 10);
     }
-    this.$emit('per-page-changed', {currentPerPage: this.currentPerPage})
+    this.$emit("per-page-changed", { currentPerPage: this.currentPerPage });
   }
 
-  @Watch('perPage', {})
-  onPerPageChange () {
+  @Watch("perPage", {})
+  onPerPageChange() {
     if (this.perPage) {
-      this.currentPerPage = this.perPage
+      this.currentPerPage = this.perPage;
     } else {
       // reset to default
-      this.currentPerPage = 10
+      this.currentPerPage = 10;
     }
-    this.perPageChanged()
+    this.perPageChanged();
   }
 
-  get paginatedInfo () {
+  get paginatedInfo() {
     if (this.currentPerPage === -1) {
-      return `1 - ${this.total} ${this.ofText} ${this.total}`
+      return `1 - ${this.total} ${this.ofText} ${this.total}`;
     }
-    const first = (this.currentPage - 1) * this.currentPerPage ? (this.currentPage - 1) * this.currentPerPage : 1
-    const last = Math.min(this.total, this.currentPerPage * this.currentPage)
-    return `${first} - ${last} ${this.ofText} ${this.total}`
+    const first =
+      (this.currentPage - 1) * this.currentPerPage
+        ? (this.currentPage - 1) * this.currentPerPage
+        : 1;
+    const last = Math.min(this.total, this.currentPerPage * this.currentPage);
+    return `${first} - ${last} ${this.ofText} ${this.total}`;
   }
 
-  get nextIsPossible () {
-    return (this.total > this.currentPerPage * this.currentPage)
+  get nextIsPossible() {
+    return this.total > this.currentPerPage * this.currentPage;
   }
 
-  get prevIsPossible () {
-    return this.currentPage > 1
+  get prevIsPossible() {
+    return this.currentPage > 1;
   }
 
-  mounted () {
+  mounted() {
     if (this.perPage) {
-      this.currentPerPage = this.perPage
+      this.currentPerPage = this.perPage;
     }
   }
 }
